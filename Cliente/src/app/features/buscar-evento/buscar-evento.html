@@ -44,6 +44,7 @@
     <table class="results-table">
       <thead>
         <tr>
+          <th>Evento ID</th>
           <th>Título</th>
           <th>Venue</th>
           <th>Tipo</th>
@@ -55,8 +56,9 @@
         </tr>
       </thead>
       <tbody>
-        @for (evento of eventos(); track evento.titulo) {
+        @for (evento of eventos(); track evento.eventoId) {
           <tr>
+            <td>{{ evento.eventoId }}</td>
             <td>{{ evento.titulo }}</td>
             <td>{{ evento.venueName }}</td>
             <td>{{ evento.tipoEventoNombre }}</td>

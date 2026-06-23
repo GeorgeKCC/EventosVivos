@@ -7,4 +7,5 @@ export const routes: Routes = [
   { path: 'crear-reserva', loadChildren: () => import('./features/crear-reserva/crear-reserva.routes').then(m => m.CREAR_RESERVA_ROUTES) },
   { path: 'pagar-reserva', loadChildren: () => import('./features/pagar-reserva/pagar-reserva.routes').then(m => m.PAGAR_RESERVA_ROUTES) },
   { path: 'buscar-reserva', loadChildren: () => import('./features/buscar-reserva/buscar-reserva.routes').then(m => m.BUSCAR_RESERVA_ROUTES) },
+  { path: 'reportes', loadChildren: () => import('./features/reportes/reportes.routes').then(m => m.REPORTES_ROUTES) },
 ];
