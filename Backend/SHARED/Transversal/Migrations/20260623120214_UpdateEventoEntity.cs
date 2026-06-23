@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Transversal.Database.Migrations
+namespace Transversal.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class UpdateEventoEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,9 +75,9 @@ namespace Transversal.Database.Migrations
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CapacidadMaxima = table.Column<int>(type: "int", nullable: false),
                     InicioEvento = table.Column<DateOnly>(type: "date", nullable: false),
-                    IniciaHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IniciaHora = table.Column<TimeOnly>(type: "time", nullable: false),
                     FinEvento = table.Column<DateOnly>(type: "date", nullable: false),
-                    FinHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FinHora = table.Column<TimeOnly>(type: "time", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     VenueId = table.Column<int>(type: "int", nullable: false),
                     TipoEventoId = table.Column<int>(type: "int", nullable: false),

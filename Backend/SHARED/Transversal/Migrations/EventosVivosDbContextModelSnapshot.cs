@@ -8,7 +8,7 @@ using Transversal.Database;
 
 #nullable disable
 
-namespace Transversal.Database.Migrations
+namespace Transversal.Migrations
 {
     [DbContext(typeof(EventosVivosDbContext))]
     partial class EventosVivosDbContextModelSnapshot : ModelSnapshot
@@ -89,11 +89,11 @@ namespace Transversal.Database.Migrations
                     b.Property<DateOnly>("FinEvento")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("FinHora")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("FinHora")
+                        .HasColumnType("time");
 
-                    b.Property<DateTime>("IniciaHora")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("IniciaHora")
+                        .HasColumnType("time");
 
                     b.Property<DateOnly>("InicioEvento")
                         .HasColumnType("date");

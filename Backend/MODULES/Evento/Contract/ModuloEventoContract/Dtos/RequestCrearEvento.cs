@@ -5,9 +5,9 @@
         string Descripcion,
         int CapacidadMaxima,
         DateOnly InicioEvento,
-        DateTime IniciaHora,
+        TimeOnly IniciaHora,
         DateOnly FinEvento,
-        DateTime FinHora,
+        TimeOnly FinHora,
         Decimal Precio,
         int VenueId,
         int TipoEventoId

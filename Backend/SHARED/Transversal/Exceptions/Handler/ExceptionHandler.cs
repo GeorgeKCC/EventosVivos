@@ -23,7 +23,19 @@ namespace Transversal.Exceptions.Handler
                     httpContext.Response.StatusCode = StatusCodes.Status404NotFound,
                     "404"
                 ),
-                    VenueCapacityExceedsException => (
+                VenueCapacityExceedsException => (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
+                    "400"
+                ),
+                VenueScheduleConflictException => (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
+                    "400"
+                ),
+                WeekendScheduleException => (
                     exception.Message,
                     exception.GetType().Name,
                     httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,

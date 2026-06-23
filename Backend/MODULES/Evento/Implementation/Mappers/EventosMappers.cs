@@ -23,5 +23,23 @@ namespace ModuloEvento.Mappers
                 EstadoId = (int)EstadoEnum.Activo
             };
         }
+
+        public static ResponseBuscarEvento EventoToResponseBuscarEvento(this Evento evento)
+        {
+            return new ResponseBuscarEvento(
+                evento.Titulo,
+                evento.Descripcion,
+                evento.VenueId,
+                evento.Venue.Nombre,
+                evento.CapacidadMaxima,
+                evento.InicioEvento,
+                evento.IniciaHora,
+                evento.FinEvento,
+                evento.FinHora,
+                evento.TipoEventoId,
+                evento.TipoEvento.Nombre,
+                evento.EstadoId,
+                evento.EstadoEvento.Nombre);
+        }
     }
 }

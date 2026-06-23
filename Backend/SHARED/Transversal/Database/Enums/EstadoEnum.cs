@@ -2,7 +2,7 @@
 {
     public enum EstadoEnum
     {
-        Activo,
-        Completado
+        Activo = 1,
+        Completado = 2
     }
 }

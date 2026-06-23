@@ -15,9 +15,9 @@ namespace Transversal.Database.Entities
         public required string Descripcion { get; set; }
         public required int CapacidadMaxima { get; set; }
         public required DateOnly InicioEvento { get; set; }
-        public required DateTime IniciaHora { get; set; }
+        public required TimeOnly IniciaHora { get; set; }
         public required DateOnly FinEvento { get; set; }
-        public required DateTime FinHora { get; set; }
+        public required TimeOnly FinHora { get; set; }
         public required Decimal Precio { get; set; }
 
         [ForeignKey(nameof(Venue))]

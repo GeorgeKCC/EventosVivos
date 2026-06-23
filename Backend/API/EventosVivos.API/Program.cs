@@ -1,4 +1,6 @@
+using ModuloEvento;
 using Scalar.AspNetCore;
+using Transversal.Cache;
 using Transversal.Database;
 using Transversal.Exceptions;
 
@@ -12,6 +14,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.EventosVivosDataBaseRegisterService(builder.Configuration);
 builder.Services.AddCustomException();
+builder.Services.CacheRegisterServices(builder.Configuration);
+
+builder.Services.ModuloEventoRegisterServices();
 
 var app = builder.Build();
 
