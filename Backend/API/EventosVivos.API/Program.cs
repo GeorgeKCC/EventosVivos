@@ -17,6 +17,7 @@ builder.Services.AddCustomException();
 builder.Services.CacheRegisterServices(builder.Configuration);
 
 builder.Services.ModuloEventoRegisterServices();
+builder.Services.ModuloEventoRegisterServices();
 
 var app = builder.Build();
 

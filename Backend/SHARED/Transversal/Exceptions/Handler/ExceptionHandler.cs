@@ -53,6 +53,18 @@ namespace Transversal.Exceptions.Handler
                     httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
                     "400"
                 ),
+                ReservationConfirmedException => (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
+                    "400"
+                ),
+                ReservationCancelException => (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
+                    "400"
+                ),
                 _ =>
                 (
                    exception.Message,
