@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ModuloEventoTest\**" />
+    <EmbeddedResource Remove="ModuloEventoTest\**" />
+    <None Remove="ModuloEventoTest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ModuloEventoTest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Contract\ModuloEventoContract\ModuloEventoContract.csproj" />
   </ItemGroup>
 
