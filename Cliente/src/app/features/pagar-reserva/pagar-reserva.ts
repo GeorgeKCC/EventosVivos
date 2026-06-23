@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../login/services';
 import { PagarReservaService } from './services';
 import { EstadoReservaEnum, RequestEstadoReserva } from './models';
 
@@ -12,8 +13,11 @@ import { EstadoReservaEnum, RequestEstadoReserva } from './models';
 })
 export class PagarReserva {
   private readonly pagarReservaService = inject(PagarReservaService);
+  private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
+
+  readonly isAdmin = this.authService.getUser()?.rol === 'Admin';
 
   form: RequestEstadoReserva = {
     estadoReservaEnum: EstadoReservaEnum.Confirmada,

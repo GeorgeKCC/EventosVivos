@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Transversal.Database.Entities;
+using System.Security.Cryptography;
 
 namespace Transversal.Database
 {
@@ -60,6 +61,25 @@ namespace Transversal.Database
                     new EstadoEvento { Nombre = "Activo" },
                     new EstadoEvento { Nombre = "Completado" }
                 );
+                context.SaveChanges();
+            }
+
+            if (!context.Roles.Any())
+            {
+                context.Roles.Add(new Rol { Nombre = "Admin" });
+                context.SaveChanges();
+            }
+
+            if (!context.Usuarios.Any())
+            {
+                var rolAdmin = context.Roles.First(r => r.Nombre == "Admin");
+                var passwordHash = Convert.ToBase64String(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes("admin")));
+                context.Usuarios.Add(new Usuario
+                {
+                    Username = "admin",
+                    PasswordHash = passwordHash,
+                    RolId = rolAdmin.Id
+                });
                 context.SaveChanges();
             }
 

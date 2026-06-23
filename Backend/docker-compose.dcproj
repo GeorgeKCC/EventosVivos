@@ -11,5 +11,12 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="MODULES\Security\Contract\ModuloSecurityContract\Dtos\RequestLogin.cs" />
+    <None Include="MODULES\Security\Contract\ModuloSecurityContract\Dtos\ResponseLogin.cs" />
+    <None Include="MODULES\Security\Contract\ModuloSecurityContract\ILoginUseCase.cs" />
+    <None Include="MODULES\Security\Contract\ModuloSecurityContract\ModuloSecurityContract.csproj" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurity\ImplementationUseCase\LoginUseCase.cs" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurity\ModuloSecurity.csproj" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurity\ModuloSecurityService.cs" />
   </ItemGroup>
 </Project>

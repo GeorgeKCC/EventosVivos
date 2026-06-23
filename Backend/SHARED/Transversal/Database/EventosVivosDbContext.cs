@@ -11,6 +11,8 @@ namespace Transversal.Database
         public DbSet<EstadoReserva> EstadoReserva { get; set; }
         public DbSet<EstadoEvento> EstadoEvento { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
+        public DbSet<Rol> Roles { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

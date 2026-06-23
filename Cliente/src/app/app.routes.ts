@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'buscar-evento', pathMatch: 'full' },
+  { path: 'login', loadChildren: () => import('./features/login/login.routes').then(m => m.LOGIN_ROUTES) },
   { path: 'buscar-evento', loadChildren: () => import('./features/buscar-evento/buscar-evento.routes').then(m => m.BUSCAR_EVENTO_ROUTES) },
   { path: 'crear-evento', loadChildren: () => import('./features/crear-evento/crear-evento.routes').then(m => m.CREAR_EVENTO_ROUTES) },
   { path: 'crear-reserva', loadChildren: () => import('./features/crear-reserva/crear-reserva.routes').then(m => m.CREAR_RESERVA_ROUTES) },

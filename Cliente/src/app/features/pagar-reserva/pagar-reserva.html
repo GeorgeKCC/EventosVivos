@@ -27,9 +27,11 @@
 
     <div class="form-row actions">
       <button type="button" (click)="router.navigate(['/buscar-evento'])">Cancelar</button>
-      <button type="submit" [disabled]="loading()" class="btn-primary">
-        {{ loading() ? 'Procesando...' : 'Confirmar' }}
-      </button>
+      @if (isAdmin) {
+        <button type="submit" [disabled]="loading()" class="btn-primary">
+          {{ loading() ? 'Procesando...' : 'Confirmar' }}
+        </button>
+      }
     </div>
   </form>
 </section>

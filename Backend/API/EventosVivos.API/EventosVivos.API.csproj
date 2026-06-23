@@ -29,6 +29,7 @@
     <ProjectReference Include="..\..\MODULES\Evento\Implementation\ModuloEvento.csproj" />
     <ProjectReference Include="..\..\MODULES\Reporte\Implementation\ModuloReporte\ModuloReporte.csproj" />
     <ProjectReference Include="..\..\MODULES\Reserva\Implementation\ModuloReserva\ModuloReserva.csproj" />
+    <ProjectReference Include="..\..\MODULES\Security\Implementation\ModuloSecurity\ModuloSecurity.csproj" />
     <ProjectReference Include="..\..\MODULES\Tarea\ModuloTarea\ModuloTarea.csproj" />
   </ItemGroup>
 
