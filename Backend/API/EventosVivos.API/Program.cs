@@ -2,6 +2,7 @@ using Asp.Versioning;
 using ModuloEvento;
 using ModuloReporte;
 using ModuloReserva;
+using ModuloTarea;
 using Scalar.AspNetCore;
 using Transversal.Cache;
 using Transversal.Database;
@@ -37,6 +38,7 @@ builder.Services.CacheRegisterServices(builder.Configuration);
 builder.Services.ModuloEventoRegisterServices();
 builder.Services.ModuloReservaRegisterServices();
 builder.Services.ModuloReporteRegisterService();
+builder.Services.ModuloTareaRegisterServices();
 
 var app = builder.Build();
 

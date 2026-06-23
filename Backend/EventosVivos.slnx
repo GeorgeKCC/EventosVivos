@@ -27,6 +27,10 @@
     <Project Path="MODULES/Reserva/Implementation/ModuloReserva/ModuloReserva.csproj" Id="82fda0f3-3e9e-4d3e-bd18-1b998e06f2d0" />
     <Project Path="MODULES/Reserva/Implementation/ModuloReservaTest/ModuloReservaTest.csproj" Id="7f4baab4-9364-4cdc-8b09-56b6316b2b7e" />
   </Folder>
+  <Folder Name="/MODULES/Tarea/">
+    <Project Path="MODULES/Tarea/ModuloTarea/ModuloTarea.csproj" />
+    <Project Path="MODULES/Tarea/ModuloTareaTest/ModuloTareaTest.csproj" Id="6103699e-1cb5-4a49-a528-6713f6be2ce2" />
+  </Folder>
   <Folder Name="/SHARED/">
     <Project Path="SHARED/Transversal/Transversal.csproj" Id="f73690da-fe73-4ca7-a946-5c16fd00258e" />
   </Folder>
