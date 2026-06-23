@@ -41,6 +41,18 @@ namespace Transversal.Exceptions.Handler
                     httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
                     "400"
                 ),
+                EventoSoldOutException => (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
+                    "400"
+                ),
+                ReservaLimitException => (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest,
+                    "400"
+                ),
                 _ =>
                 (
                    exception.Message,

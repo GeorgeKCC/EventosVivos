@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\MODULES\Evento\Implementation\ModuloEvento.csproj" />
-    <ProjectReference Include="..\..\MODULES\Reserva\ModuloReserva\ModuloReserva.csproj" />
+    <ProjectReference Include="..\..\MODULES\Reserva\Implementation\ModuloReserva\ModuloReserva.csproj" />
   </ItemGroup>
 
 </Project>

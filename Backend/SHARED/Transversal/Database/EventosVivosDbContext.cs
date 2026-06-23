@@ -10,6 +10,7 @@ namespace Transversal.Database
         public DbSet<TipoEvento> TipoEventos { get; set; }
         public DbSet<EstadoReserva> EstadoReserva { get; set; }
         public DbSet<EstadoEvento> EstadoEvento { get; set; }
+        public DbSet<Reserva> Reservas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

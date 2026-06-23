@@ -10,8 +10,12 @@
   <Folder Name="/MODULES/Evento/Implementation/">
     <Project Path="MODULES/Evento/Implementation/ModuloEvento.csproj" />
   </Folder>
-  <Folder Name="/MODULES/Reserva/">
-    <Project Path="MODULES/Reserva/ModuloReserva/ModuloReserva.csproj" Id="4f12006e-7cf7-49cf-abbc-bb006ad24477" />
+  <Folder Name="/MODULES/Reserva/" />
+  <Folder Name="/MODULES/Reserva/Contract/">
+    <Project Path="MODULES/Reserva/Contract/ModuloReservaContract/ModuloReservaContract.csproj" Id="339cd629-f314-4f4b-a6bd-45d953a62d08" />
+  </Folder>
+  <Folder Name="/MODULES/Reserva/Implementation/">
+    <Project Path="MODULES/Reserva/Implementation/ModuloReserva/ModuloReserva.csproj" Id="82fda0f3-3e9e-4d3e-bd18-1b998e06f2d0" />
   </Folder>
   <Folder Name="/SHARED/">
     <Project Path="SHARED/Transversal/Transversal.csproj" Id="f73690da-fe73-4ca7-a946-5c16fd00258e" />
