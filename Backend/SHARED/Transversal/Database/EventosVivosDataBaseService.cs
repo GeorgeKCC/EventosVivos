@@ -10,10 +10,10 @@ namespace Transversal.Database
     {
         public static IServiceCollection EventosVivosDataBaseRegisterService(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("SqlServerConnection") ??
-                                   throw new Exception("Not found configuration connection string sql");
+            var connectionString = configuration.GetConnectionString("PostgreSqlConnection") ??
+                                   throw new Exception("Not found configuration connection string PostgreSQL");
 
-            services.AddDbContext<EventosVivosDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<EventosVivosDbContext>(options => options.UseNpgsql(connectionString));
 
             return services;
         }

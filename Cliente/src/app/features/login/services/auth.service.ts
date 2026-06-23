@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, finalize } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { RequestLogin, ResponseLogin } from '../models';
 
@@ -11,18 +11,27 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
+  private readonly userSubject = new BehaviorSubject<{ username: string; rol: string } | null>(this.getUser());
+  readonly user$ = this.userSubject.asObservable();
+
   login(request: RequestLogin): Observable<ResponseLogin> {
     return this.http.post<ResponseLogin>(`${this.baseUrl}/login`, request).pipe(
       tap((response) => {
         localStorage.setItem(this.TOKEN_KEY, response.token);
         localStorage.setItem(this.USER_KEY, JSON.stringify({ username: response.username, rol: response.rol }));
+        this.userSubject.next({ username: response.username, rol: response.rol });
       })
     );
   }
 
-  logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+  logout(): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/logout`, {}).pipe(
+      finalize(() => {
+        localStorage.removeItem(this.TOKEN_KEY);
+        localStorage.removeItem(this.USER_KEY);
+        this.userSubject.next(null);
+      })
+    );
   }
 
   getToken(): string | null {

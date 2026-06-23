@@ -3,24 +3,25 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__SqlServerConnection=Server=SqlServer,1433;Database=EventosVivos;User Id=SA;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__PostgreSqlConnection=Host=PostgreSql;Port=5432;Database=EventosVivos;Username=postgres;Password=YourStrong!Passw0rd
       - ConnectionStrings__RedisConnection=Redis:6379
     ports:
       - "8080:8080"
     depends_on:
-      - SqlServer
+      - PostgreSql
       - Redis
- 
-  SqlServer:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+
+  PostgreSql:
+    image: postgres:17-alpine
+    container_name: PostgreSql
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
-    platform: "linux/amd64"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "YourStrong!Passw0rd"
+      POSTGRES_DB: EventosVivos
     ports:
-      - "1434:1433"
+      - "5432:5432"
     volumes:
-      - sql_data:/var/opt/mssql
+      - pg_data:/var/lib/postgresql/data
 
   Redis:
     image: redis:latest
@@ -31,5 +32,5 @@ services:
       - redis-data:/data
 
 volumes:
-    sql_data:
+    pg_data:
     redis-data:

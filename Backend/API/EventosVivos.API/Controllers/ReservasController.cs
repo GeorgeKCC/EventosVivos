@@ -40,6 +40,10 @@ namespace EventosVivos.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtiene todas las reservas registradas.
+        /// </summary>
+        /// <returns>Lista de reservas.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

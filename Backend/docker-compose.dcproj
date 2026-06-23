@@ -15,6 +15,12 @@
     <None Include="MODULES\Security\Contract\ModuloSecurityContract\Dtos\ResponseLogin.cs" />
     <None Include="MODULES\Security\Contract\ModuloSecurityContract\ILoginUseCase.cs" />
     <None Include="MODULES\Security\Contract\ModuloSecurityContract\ModuloSecurityContract.csproj" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurityTest\GlobalUsings.cs" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurityTest\LoginUseCaseTest.cs" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurityTest\LogoutUseCaseTest.cs" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurityTest\ModuloSecurityTest.csproj" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurityTest\TokenBlacklistServiceTest.cs" />
+    <None Include="MODULES\Security\Implementation\ModuloSecurityTest\ValidationLoginTest.cs" />
     <None Include="MODULES\Security\Implementation\ModuloSecurity\ImplementationUseCase\LoginUseCase.cs" />
     <None Include="MODULES\Security\Implementation\ModuloSecurity\ModuloSecurity.csproj" />
     <None Include="MODULES\Security\Implementation\ModuloSecurity\ModuloSecurityService.cs" />

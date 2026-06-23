@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { EventoService } from './services';
@@ -10,12 +10,16 @@ import { RequestBuscarEvento, ResponseBuscarEvento } from './models';
   templateUrl: './buscar-evento.html',
   styleUrl: './buscar-evento.scss'
 })
-export class BuscarEvento {
+export class BuscarEvento implements OnInit {
   private readonly eventoService = inject(EventoService);
 
   filters: RequestBuscarEvento = {};
   eventos = signal<ResponseBuscarEvento[]>([]);
   loading = signal(false);
+
+  ngOnInit(): void {
+    this.search();
+  }
 
   search(): void {
     this.loading.set(true);

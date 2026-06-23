@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Transversal.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialPostgreSQL : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +16,9 @@ namespace Transversal.Migrations
                 name: "EstadoEvento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,9 +29,9 @@ namespace Transversal.Migrations
                 name: "EstadoReserva",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,12 +39,25 @@ namespace Transversal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rol",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rol", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TipoEvento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,11 +68,11 @@ namespace Transversal.Migrations
                 name: "Venues",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Capacidad = table.Column<int>(type: "int", nullable: false),
-                    Ciudad = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Capacidad = table.Column<int>(type: "integer", nullable: false),
+                    Ciudad = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,22 +80,43 @@ namespace Transversal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Usuario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    RolId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Usuario_Rol_RolId",
+                        column: x => x.RolId,
+                        principalTable: "Rol",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CapacidadMaxima = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Titulo = table.Column<string>(type: "text", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: false),
+                    CapacidadMaxima = table.Column<int>(type: "integer", nullable: false),
                     InicioEvento = table.Column<DateOnly>(type: "date", nullable: false),
-                    IniciaHora = table.Column<TimeOnly>(type: "time", nullable: false),
+                    IniciaHora = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     FinEvento = table.Column<DateOnly>(type: "date", nullable: false),
-                    FinHora = table.Column<TimeOnly>(type: "time", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    VenueId = table.Column<int>(type: "int", nullable: false),
-                    TipoEventoId = table.Column<int>(type: "int", nullable: false),
-                    EstadoId = table.Column<int>(type: "int", nullable: false)
+                    FinHora = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    Precio = table.Column<decimal>(type: "numeric", nullable: false),
+                    VenueId = table.Column<int>(type: "integer", nullable: false),
+                    TipoEventoId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,15 +145,15 @@ namespace Transversal.Migrations
                 name: "Reserva",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    NombreComprador = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    EmailComprador = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FechaCancelacion = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    EsPerdida = table.Column<bool>(type: "bit", nullable: false),
-                    EventoId = table.Column<int>(type: "int", nullable: false),
-                    EstadoReservaId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Cantidad = table.Column<int>(type: "integer", nullable: false),
+                    NombreComprador = table.Column<string>(type: "text", nullable: false),
+                    EmailComprador = table.Column<string>(type: "text", nullable: false),
+                    FechaCancelacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    EsPerdida = table.Column<bool>(type: "boolean", nullable: false),
+                    EventoId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoReservaId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -229,6 +264,11 @@ namespace Transversal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Usuario_RolId",
+                table: "Usuario",
+                column: "RolId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Venues_Id",
                 table: "Venues",
                 column: "Id",
@@ -248,10 +288,16 @@ namespace Transversal.Migrations
                 name: "Reserva");
 
             migrationBuilder.DropTable(
+                name: "Usuario");
+
+            migrationBuilder.DropTable(
                 name: "EstadoReserva");
 
             migrationBuilder.DropTable(
                 name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "Rol");
 
             migrationBuilder.DropTable(
                 name: "EstadoEvento");

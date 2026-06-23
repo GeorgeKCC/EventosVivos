@@ -19,7 +19,9 @@
         <label for="estadoReservaEnum">Acción</label>
         <select id="estadoReservaEnum" [(ngModel)]="form.estadoReservaEnum" name="estadoReservaEnum" required>
           @for (estado of estados; track estado.value) {
-            <option [value]="estado.value">{{ estado.label }}</option>
+            @if (estado.value !== 2 || isAdmin) {
+              <option [value]="estado.value">{{ estado.label }}</option>
+            }
           }
         </select>
       </div>
@@ -27,11 +29,9 @@
 
     <div class="form-row actions">
       <button type="button" (click)="router.navigate(['/buscar-evento'])">Cancelar</button>
-      @if (isAdmin) {
         <button type="submit" [disabled]="loading()" class="btn-primary">
           {{ loading() ? 'Procesando...' : 'Confirmar' }}
         </button>
-      }
     </div>
   </form>
 </section>

@@ -33,6 +33,7 @@
   </Folder>
   <Folder Name="/MODULES/Security/Implementation/">
     <Project Path="MODULES/Security/Implementation/ModuloSecurity/ModuloSecurity.csproj" />
+    <Project Path="MODULES/Security/Implementation/ModuloSecurityTest/ModuloSecurityTest.csproj" />
   </Folder>
   <Folder Name="/MODULES/Tarea/">
     <Project Path="MODULES/Tarea/ModuloTarea/ModuloTarea.csproj" />

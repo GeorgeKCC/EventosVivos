@@ -20,7 +20,7 @@ export class PagarReserva {
   readonly isAdmin = this.authService.getUser()?.rol === 'Admin';
 
   form: RequestEstadoReserva = {
-    estadoReservaEnum: EstadoReservaEnum.Confirmada,
+    estadoReservaEnum: this.isAdmin ? EstadoReservaEnum.Confirmada : EstadoReservaEnum.Cancelada,
     reservaId: 0
   };
 

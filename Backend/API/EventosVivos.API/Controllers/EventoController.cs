@@ -40,6 +40,10 @@ namespace EventosVivos.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtiene todos los venues disponibles.
+        /// </summary>
+        /// <returns>Lista de venues.</returns>
         [HttpGet("GetAllVenue")]
         [Cacheable("Venue:list", DurationSeconds = 120, Tags = new[] { "Venue" })]
         public async Task<IActionResult> GetAllVenue()
@@ -48,6 +52,10 @@ namespace EventosVivos.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtiene todos los tipos de evento disponibles.
+        /// </summary>
+        /// <returns>Lista de tipos de evento.</returns>
         [HttpGet("GetAllTipoEvento")]
         [Cacheable("TipoEvento:list", DurationSeconds = 120, Tags = new[] { "TipoEvento" })]
         public async Task<IActionResult> GetAllTipoEvento()

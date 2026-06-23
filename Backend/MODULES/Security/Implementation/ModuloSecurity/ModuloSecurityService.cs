@@ -18,6 +18,8 @@ namespace ModuloSecurity
         public static IServiceCollection ModuloSecurityRegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ILoginUseCase, LoginUseCase>();
+            services.AddScoped<ILogoutUseCase, LogoutUseCase>();
+            services.AddSingleton<ITokenBlacklistService, TokenBlacklistService>();
             services.AddScoped<IValidator<RequestLogin>, ValidationLogin>();
 
             var jwtSettings = configuration.GetSection("Jwt");
@@ -39,6 +41,20 @@ namespace ModuloSecurity
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var blacklistService = context.HttpContext.RequestServices.GetRequiredService<ITokenBlacklistService>();
+                        var token = context.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+
+                        if (await blacklistService.IsTokenRevokedAsync(token))
+                        {
+                            context.Fail("Token revocado.");
+                        }
+                    }
                 };
             });
 
