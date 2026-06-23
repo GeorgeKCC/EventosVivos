@@ -15,6 +15,8 @@ namespace Transversal.Database.Entities
         public int Cantidad { get; set; }
         public required string NombreComprador { get; set; }
         public required string EmailComprador { get; set; }
+        public DateTime? FechaCancelacion { get; set; }
+        public bool EsPerdida { get; set; }
 
         [ForeignKey("Evento")]
         public required int EventoId { get; set; }

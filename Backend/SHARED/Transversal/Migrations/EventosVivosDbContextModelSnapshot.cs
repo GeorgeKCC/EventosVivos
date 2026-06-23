@@ -128,6 +128,55 @@ namespace Transversal.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("Transversal.Database.Entities.Reserva", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmailComprador")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("EsPerdida")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("EstadoReservaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaCancelacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NombreComprador")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmailComprador")
+                        .IsUnique();
+
+                    b.HasIndex("EstadoReservaId");
+
+                    b.HasIndex("EventoId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("NombreComprador")
+                        .IsUnique();
+
+                    b.ToTable("Reserva");
+                });
+
             modelBuilder.Entity("Transversal.Database.Entities.TipoEvento", b =>
                 {
                     b.Property<int>("Id")
@@ -206,6 +255,25 @@ namespace Transversal.Migrations
                     b.Navigation("TipoEvento");
 
                     b.Navigation("Venue");
+                });
+
+            modelBuilder.Entity("Transversal.Database.Entities.Reserva", b =>
+                {
+                    b.HasOne("Transversal.Database.Entities.EstadoReserva", "EstadoReserva")
+                        .WithMany()
+                        .HasForeignKey("EstadoReservaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Transversal.Database.Entities.Evento", "Evento")
+                        .WithMany()
+                        .HasForeignKey("EventoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EstadoReserva");
+
+                    b.Navigation("Evento");
                 });
 #pragma warning restore 612, 618
         }

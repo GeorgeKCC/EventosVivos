@@ -7,7 +7,8 @@ namespace EventosVivos.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReservasController(ICrearReservaUserCase crearReservaUserCase) : ControllerBase
+    public class ReservasController(ICrearReservaUserCase crearReservaUserCase,
+                                    IConfirmarReservaUseCase confirmarReservaUseCase) : ControllerBase
     {
 
         [HttpPost]
@@ -15,6 +16,14 @@ namespace EventosVivos.API.Controllers
         public async Task<IActionResult> Create(RequestCrearReserva requestCrearReserva)
         {
             await crearReservaUserCase.ExecuteAsync(requestCrearReserva);
+            return NoContent();
+        }
+
+        [HttpPost("Payment")]
+        [InvalidateCache(Tags = new[] { "Reserva" })]
+        public async Task<IActionResult> Payment(RequestEstadoReserva requestEstadoReserva)
+        {
+            await confirmarReservaUseCase.ExecuteAsync(requestEstadoReserva);
             return NoContent();
         }
     }

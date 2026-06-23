@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Transversal.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateEventoEntity : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -106,6 +106,37 @@ namespace Transversal.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reserva",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    NombreComprador = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmailComprador = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FechaCancelacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EsPerdida = table.Column<bool>(type: "bit", nullable: false),
+                    EventoId = table.Column<int>(type: "int", nullable: false),
+                    EstadoReservaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reserva", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reserva_EstadoReserva_EstadoReservaId",
+                        column: x => x.EstadoReservaId,
+                        principalTable: "EstadoReserva",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reserva_Events_EventoId",
+                        column: x => x.EventoId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_EstadoEvento_Id",
                 table: "EstadoEvento",
@@ -158,6 +189,34 @@ namespace Transversal.Migrations
                 column: "VenueId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reserva_EmailComprador",
+                table: "Reserva",
+                column: "EmailComprador",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reserva_EstadoReservaId",
+                table: "Reserva",
+                column: "EstadoReservaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reserva_EventoId",
+                table: "Reserva",
+                column: "EventoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reserva_Id",
+                table: "Reserva",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reserva_NombreComprador",
+                table: "Reserva",
+                column: "NombreComprador",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TipoEvento_Id",
                 table: "TipoEvento",
                 column: "Id",
@@ -185,6 +244,9 @@ namespace Transversal.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Reserva");
+
             migrationBuilder.DropTable(
                 name: "EstadoReserva");
 

@@ -10,6 +10,13 @@
   <Folder Name="/MODULES/Evento/Implementation/">
     <Project Path="MODULES/Evento/Implementation/ModuloEvento.csproj" />
   </Folder>
+  <Folder Name="/MODULES/Reporte/" />
+  <Folder Name="/MODULES/Reporte/Contract/">
+    <Project Path="MODULES/Reporte/Contract/ModuloReporteContract/ModuloReporteContract.csproj" Id="37c2b21b-b591-4379-bfaa-8c812653a96b" />
+  </Folder>
+  <Folder Name="/MODULES/Reporte/Implementation/">
+    <Project Path="MODULES/Reporte/Implementation/ModuloReporte/ModuloReporte.csproj" Id="2073de96-8ecd-44a5-ac25-96bc7822d068" />
+  </Folder>
   <Folder Name="/MODULES/Reserva/" />
   <Folder Name="/MODULES/Reserva/Contract/">
     <Project Path="MODULES/Reserva/Contract/ModuloReservaContract/ModuloReservaContract.csproj" Id="339cd629-f314-4f4b-a6bd-45d953a62d08" />
