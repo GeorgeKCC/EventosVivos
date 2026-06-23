@@ -38,9 +38,21 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
+      - name: Prepare Vercel prebuilt output
+        run: |
+          mkdir -p .vercel/output/static
+          cp -r dist/Cliente/* .vercel/output/static/
+          cat > .vercel/output/config.json << 'EOF'
+          {
+            "version": 3,
+            "routes": [
+              { "handle": "filesystem" },
+              { "src": "/(.*)", "dest": "/index.html" }
+            ]
+          }
+          EOF
+          mkdir -p .vercel
+          echo '{"orgId":"'"$VERCEL_ORG_ID"'","projectId":"'"$VERCEL_PROJECT_ID"'"}' > .vercel/project.json
+
       - name: Deploy to Vercel
-        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
-        env:
-          VERCEL_PROJECT_SETTINGS_FRAMEWORK: null
-          VERCEL_PROJECT_SETTINGS_BUILD_COMMAND: ''
-          VERCEL_PROJECT_SETTINGS_OUTPUT_DIRECTORY: dist/Cliente
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
