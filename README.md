@@ -31,6 +31,17 @@ El backend implementa una **arquitectura modular monolítica** combinada con **V
 │  │              │  │ ├─Validators │  │              │  │        │ │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └────────┘ │
 │                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐  │
+│  │                     ModuloSecurity                            │  │
+│  │  Contract: ILoginUseCase, ILogoutUseCase, ITokenBlacklist    │  │
+│  │  Implementation: JWT Auth, Token Blacklist, Validators       │  │
+│  └──────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐  │
+│  │                     Middlewares                               │  │
+│  │  ApiKeyMiddleware: Validación X-Api-Key en cada request      │  │
+│  └──────────────────────────────────────────────────────────────┘  │
+│                                                                     │
 ├─────────────────────────────────────────────────────────────────────┤
 │                      SHARED (Transversal)                           │
 │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
@@ -251,6 +262,13 @@ D:\EventosVivos\Backend\
 │
 ├── API/
 │   └── EventosVivos.API/            ← Host ASP.NET Core (Controllers, Program.cs)
+│       ├── Controllers/
+│       │   ├── AuthController.cs     ← Login / Logout
+│       │   ├── EventoController.cs
+│       │   ├── ReservasController.cs
+│       │   └── ReporteController.cs
+│       └── Middlewares/
+│           └── ApiKeyMiddleware.cs   ← Validación X-Api-Key por header
 │
 ├── MODULES/
 │   ├── Evento/
@@ -264,6 +282,10 @@ D:\EventosVivos\Backend\
 │   ├── Reporte/
 │   │   ├── Contract/                ← Interfaces + DTOs + Enums públicos
 │   │   └── Implementation/          ← UseCases, Strategies (Excel generation)
+│   │
+│   ├── Security/
+│   │   ├── Contract/                ← ILoginUseCase, ILogoutUseCase, ITokenBlacklistService
+│   │   └── Implementation/          ← JWT Auth, Token Blacklist, Validators
 │   │
 │   └── Tarea/
 │       ├── ModuloTarea/             ← Background Jobs (Quartz.NET)
@@ -291,6 +313,7 @@ D:\EventosVivos\Backend\
 | **Base de Datos** | SQL Server | 2022 |
 | **Cache Distribuido** | Redis + FusionCache | Redis latest / FusionCache 2.6.0 |
 | **Backplane** | StackExchange.Redis Backplane | 2.6.0 |
+| **Autenticación** | JWT Bearer (Microsoft.AspNetCore.Authentication.JwtBearer) | 10.0.9 |
 | **Validación** | FluentValidation | 12.1.1 |
 | **Background Jobs** | Quartz.NET | 3.14.0 |
 | **Reportes Excel** | ClosedXML | 0.105.0 |
@@ -298,6 +321,7 @@ D:\EventosVivos\Backend\
 | **API Versioning** | Asp.Versioning | 10.0.0 |
 | **Testing** | xUnit + Moq + FluentAssertions + EF Core InMemory | - |
 | **Contenedores** | Docker + Docker Compose | - |
+| **Despliegue** | Railway | - |
 
 ---
 
@@ -381,10 +405,14 @@ Se implementa un sistema de **cache distribuido multi-nivel** usando **FusionCac
 ### ModuloEvento
 - **Crear Evento**: Validación de campos, capacidad vs venue, solapamiento de horarios, restricción nocturna en fines de semana
 - **Buscar Eventos**: Filtrado dinámico por tipo, venue, estado, título y rango de fechas
+- **Obtener Venues**: Lista de venues disponibles
+- **Obtener Tipos de Evento**: Lista de tipos de evento disponibles
 
 ### ModuloReserva
 - **Crear Reserva**: Validación de disponibilidad, límites por proximidad temporal (24h/1h), límites por precio (>$100 = máx 10 entradas)
 - **Confirmar/Cancelar Reserva**: Strategy Pattern para manejar transiciones de estado con reglas de penalización (cancelación <48h = pérdida)
+- **Obtener Reservas**: Lista de todas las reservas registradas
+- **Código de Reserva**: Generación aleatoria con formato `EV-{6 dígitos}`
 
 ### ModuloReporte
 - **Generar Reportes Excel**: Strategy Pattern con 5 tipos de reporte:
@@ -393,6 +421,13 @@ Se implementa un sistema de **cache distribuido multi-nivel** usando **FusionCac
   - Total Entradas Disponibles
   - Porcentaje de Ocupación
   - Total de Ingresos
+
+### ModuloSecurity
+- **Login**: Autenticación con usuario y contraseña, retorna token JWT con claims (nombre, rol)
+- **Logout**: Invalidación de token JWT mediante blacklist en memoria
+- **Token Blacklist**: Servicio singleton que gestiona tokens revocados
+- **Validación de tokens**: En cada request autenticada se verifica que el token no esté revocado
+- **Seed por defecto**: Usuario `admin` / Password `admin` / Rol `Admin`
 
 ### ModuloTarea
 - **CompletarEventosJob**: Job programado (Quartz.NET, cron cada 5 min) que marca como "Completado" los eventos cuya fecha/hora de fin ya pasó
@@ -516,6 +551,7 @@ Cada módulo tiene su proyecto de tests asociado con la convención `Modulo*Test
 | `ModuloReservaTest` | Reserva |
 | `ModuloReporteTest` | Reporte |
 | `ModuloTareaTest` | Tarea |
+| `ModuloSecurityTest` | Security |
 
 ### Stack de Testing
 - **xUnit**: Framework de testing
@@ -527,22 +563,33 @@ Cada módulo tiene su proyecto de tests asociado con la convención `Modulo*Test
 
 ## 📡 API Endpoints
 
+> ⚠️ Todos los endpoints (excepto Login y Scalar) requieren el header `X-Api-Key` con el valor configurado en `appsettings.json`.
+
+### v1/Auth
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| `POST` | `/api/v1/Auth/login` | Iniciar sesión (retorna JWT) | Pública |
+| `POST` | `/api/v1/Auth/logout` | Cerrar sesión (invalida JWT) | Bearer Token |
+
 ### v1/Evento
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| `POST` | `/api/v1/Evento` | Crear evento |
-| `GET` | `/api/v1/Evento` | Buscar eventos (filtros opcionales) |
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| `POST` | `/api/v1/Evento` | Crear evento | API Key |
+| `GET` | `/api/v1/Evento` | Buscar eventos (filtros opcionales) | API Key |
+| `GET` | `/api/v1/Evento/GetAllVenue` | Obtener todos los venues | API Key |
+| `GET` | `/api/v1/Evento/GetAllTipoEvento` | Obtener todos los tipos de evento | API Key |
 
 ### v1/Reservas
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| `POST` | `/api/v1/Reservas` | Crear reserva |
-| `POST` | `/api/v1/Reservas/Payment` | Confirmar/Cancelar reserva |
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| `POST` | `/api/v1/Reservas` | Crear reserva | API Key |
+| `POST` | `/api/v1/Reservas/Payment` | Confirmar/Cancelar reserva | API Key |
+| `GET` | `/api/v1/Reservas` | Obtener todas las reservas | API Key |
 
 ### v1/Reporte
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| `GET` | `/api/v1/Reporte` | Descargar reporte Excel |
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| `GET` | `/api/v1/Reporte` | Descargar reporte Excel | API Key |
 
 ---
 
@@ -557,6 +604,205 @@ Cada módulo tiene su proyecto de tests asociado con la convención `Modulo*Test
   }
 }
 ```
+
+### JWT
+```json
+{
+  "Jwt": {
+    "Key": "EventosVivos_SuperSecretKey_2024_MinLength32Chars!",
+    "Issuer": "EventosVivos.API",
+    "Audience": "EventosVivos.Client"
+  }
+}
+```
+
+### API Key
+```json
+{
+  "ApiKey": "EV-2024-SecureKey-a1b2c3d4e5f6"
+}
+```
+
+---
+
+## 🔐 Seguridad
+
+La API implementa dos capas de seguridad:
+
+### 1. API Key (Middleware)
+Todas las peticiones (excepto `/Auth/login`, `/scalar` y `/openapi`) requieren el header:
+```
+X-Api-Key: EV-2024-SecureKey-a1b2c3d4e5f6
+```
+
+| Escenario | Resultado |
+|-----------|-----------|
+| Sin header `X-Api-Key` | `401 Unauthorized` |
+| Key incorrecta | `403 Forbidden` |
+| Key correcta | Request procesada |
+
+### 2. JWT Bearer Token
+Para endpoints protegidos con `[Authorize]` (como logout), se requiere el header:
+```
+Authorization: Bearer {token}
+```
+
+### Flujo de autenticación
+```
+1. POST /api/v1/Auth/login   → { "username": "admin", "password": "admin" }
+2. Respuesta                  → { "token": "eyJ...", "username": "admin", "rol": "Admin" }
+3. Usar token en requests     → Authorization: Bearer eyJ...
+4. POST /api/v1/Auth/logout   → Invalida el token
+```
+
+### CORS
+Configurado para permitir peticiones desde Angular:
+- Origen permitido: `http://localhost:4200`
+- Métodos: Todos
+- Headers: Todos
+
+---
+
+## 📖 Manual de Uso — Guía Paso a Paso
+
+### Prerrequisitos
+
+| Herramienta | Descarga | Descripción |
+|------------|----------|-------------|
+| **Docker Desktop** | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/) | Para ejecutar los contenedores (API, SQL Server, Redis) |
+| **Git** | [git-scm.com](https://git-scm.com/) | Para clonar el repositorio |
+
+> 💡 **Nota**: No necesitas instalar .NET SDK, SQL Server ni Redis en tu máquina. Todo se ejecuta dentro de contenedores Docker.
+
+### Paso 1: Clonar el repositorio
+
+```bash
+git clone https://github.com/GeorgeKCC/EventosVivos.git
+cd EventosVivos/Backend
+```
+
+### Paso 2: Iniciar Docker Desktop
+
+Abre **Docker Desktop** y espera a que el motor Docker esté en estado **Running** (ícono verde en la barra de tareas).
+
+### Paso 3: Levantar los contenedores
+
+```bash
+docker-compose up -d
+```
+
+Esto levantará 3 contenedores:
+| Contenedor | Puerto | Descripción |
+|-----------|--------|-------------|
+| `eventosvivos.api` | `8080` | API .NET 10 |
+| `SqlServer` | `1434` | SQL Server 2022 |
+| `Redis` | `6379` | Redis (cache) |
+
+### Paso 4: Verificar que los contenedores están corriendo
+
+```bash
+docker-compose ps
+```
+
+Todos deben mostrar estado `Up` o `running`.
+
+### Paso 5: Acceder a la API
+
+| URL | Descripción |
+|-----|-------------|
+| `http://localhost:8080/scalar/v1` | Documentación interactiva (Scalar UI) |
+| `http://localhost:8080/api/v1/Auth/login` | Endpoint de login |
+
+### Paso 6: Autenticarse en Scalar
+
+1. Abre `http://localhost:8080/scalar/v1` en tu navegador
+2. Haz clic en el botón **Authenticate**
+3. Ingresa la API Key: `EV-2024-SecureKey-a1b2c3d4e5f6`
+4. Ahora puedes probar todos los endpoints desde la interfaz
+
+### Paso 7: Probar el Login
+
+Envía un `POST` a `/api/v1/Auth/login` con el body:
+```json
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+Respuesta:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "username": "admin",
+  "rol": "Admin"
+}
+```
+
+### Paso 8: Usar los endpoints
+
+Con la API Key configurada en Scalar, puedes probar:
+
+1. **Crear un evento**: `POST /api/v1/Evento`
+2. **Buscar eventos**: `GET /api/v1/Evento`
+3. **Crear una reserva**: `POST /api/v1/Reservas`
+4. **Confirmar reserva**: `POST /api/v1/Reservas/Payment`
+5. **Descargar reporte**: `GET /api/v1/Reporte`
+
+### Detener los contenedores
+
+```bash
+docker-compose down
+```
+
+Para detener y **eliminar los datos** (volúmenes):
+```bash
+docker-compose down -v
+```
+
+---
+
+### Uso desde Angular
+
+Para consumir la API desde Angular, agrega un interceptor que envíe la API Key en cada petición:
+
+```typescript
+// api-key.interceptor.ts
+import { HttpInterceptorFn } from '@angular/common/http';
+
+export const apiKeyInterceptor: HttpInterceptorFn = (req, next) => {
+  const apiReq = req.clone({
+    setHeaders: { 'X-Api-Key': 'EV-2024-SecureKey-a1b2c3d4e5f6' }
+  });
+  return next(apiReq);
+};
+```
+
+Registrarlo en `app.config.ts`:
+```typescript
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { apiKeyInterceptor } from './api-key.interceptor';
+
+export const appConfig = {
+  providers: [
+    provideHttpClient(withInterceptors([apiKeyInterceptor])),
+  ]
+};
+```
+
+---
+
+### Despliegue en Railway (Producción)
+
+La API está desplegada en Railway:
+
+| Configuración | Valor |
+|---|---|
+| **URL Producción** | `https://eventosvivos-production-1267.up.railway.app` |
+| **Scalar UI** | `https://eventosvivos-production-1267.up.railway.app/scalar/v1` |
+| **Root Directory** | `Backend` |
+| **Dockerfile Path** | `API/EventosVivos.API/Dockerfile` |
+| **Watch Paths** | `/Backend/**` |
 
 ---
 
