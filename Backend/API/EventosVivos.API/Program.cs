@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 using Transversal.Database;
 using Transversal.Exceptions;
 
@@ -18,6 +19,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.Services.EventosVivosDataBaseExecuteSeed();
