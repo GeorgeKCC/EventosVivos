@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="API/EventosVivos.API/EventosVivos.API.csproj" Id="12f004b8-5a9c-47fc-99c1-c59cf5f224dd" />
+  </Folder>
+  <Folder Name="/MODULES/" />
+  <Folder Name="/MODULES/Evento/" />
+  <Folder Name="/MODULES/Evento/Contract/">
+    <Project Path="MODULES/Evento/Contract/ModuloEventoContract/ModuloEventoContract.csproj" Id="8498cecc-a19e-45d3-8a31-e0b06204c9e6" />
+  </Folder>
+  <Folder Name="/MODULES/Evento/Implementation/">
+    <Project Path="MODULES/Evento/Implementation/ModuloEvento.csproj" />
+  </Folder>
+  <Folder Name="/MODULES/Reserva/">
+    <Project Path="MODULES/Reserva/ModuloReserva/ModuloReserva.csproj" Id="4f12006e-7cf7-49cf-abbc-bb006ad24477" />
+  </Folder>
+  <Folder Name="/SHARED/">
+    <Project Path="SHARED/Transversal/Transversal.csproj" Id="f73690da-fe73-4ca7-a946-5c16fd00258e" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

@@ -1,0 +1,35 @@
+services:
+  eventosvivos.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__SqlServerConnection=Server=SqlServer,1433;Database=EventosVivos;User Id=SA;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__RedisConnection=Redis:6379
+    ports:
+      - "8080"
+    depends_on:
+      - SqlServer
+      - Redis
+ 
+  SqlServer:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
+    platform: "linux/amd64"
+    ports:
+      - "1434:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  Redis:
+    image: redis:latest
+    platform: "linux/amd64"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+    sql_data:
+    redis-data:

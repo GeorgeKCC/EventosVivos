@@ -1,0 +1,12 @@
+services:
+  eventosvivos.api:
+    image: ${DOCKER_REGISTRY-}eventosvivosapi
+    build:
+      context: .
+      dockerfile: API/EventosVivos.API/Dockerfile
+
+  SqlServer:
+     container_name: SqlServer
+
+  Redis:
+     container_name: Redis
