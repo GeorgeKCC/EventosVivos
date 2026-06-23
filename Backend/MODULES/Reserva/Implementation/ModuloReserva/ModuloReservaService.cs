@@ -10,7 +10,7 @@ namespace ModuloReserva
 {
     public static class ModuloReservaService
     {
-        public static IServiceCollection ModuloEventoRegisterServices(this IServiceCollection services)
+        public static IServiceCollection ModuloReservaRegisterServices(this IServiceCollection services)
         {
             services.AddScoped<ICrearReservaUserCase, CrearReservaUserCase>();
             services.AddScoped<IStrategyReserva, StrategyReservaConfirmado>();

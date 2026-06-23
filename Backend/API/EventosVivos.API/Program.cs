@@ -1,4 +1,6 @@
 using ModuloEvento;
+using ModuloReporte;
+using ModuloReserva;
 using Scalar.AspNetCore;
 using Transversal.Cache;
 using Transversal.Database;
@@ -17,7 +19,8 @@ builder.Services.AddCustomException();
 builder.Services.CacheRegisterServices(builder.Configuration);
 
 builder.Services.ModuloEventoRegisterServices();
-builder.Services.ModuloEventoRegisterServices();
+builder.Services.ModuloReservaRegisterServices();
+builder.Services.ModuloReporteRegisterService();
 
 var app = builder.Build();
 
