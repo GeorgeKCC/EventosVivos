@@ -12,6 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -51,6 +61,8 @@ if (app.Environment.IsDevelopment())
 
 app.Services.EventosVivosDataBaseExecuteSeed();
 app.UseCustomException();
+
+app.UseCors("AllowAngular");
 
 app.UseAuthorization();
 

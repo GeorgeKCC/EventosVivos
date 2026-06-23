@@ -10,7 +10,8 @@ namespace EventosVivos.API.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     public class ReservasController(ICrearReservaUserCase crearReservaUserCase,
-                                    IConfirmarReservaUseCase confirmarReservaUseCase) : ControllerBase
+                                    IConfirmarReservaUseCase confirmarReservaUseCase,
+                                    IObtenerTodoReservas obtenerTodoReservas) : ControllerBase
     {
 
         /// <summary>
@@ -35,8 +36,15 @@ namespace EventosVivos.API.Controllers
         [InvalidateCache(Tags = new[] { "Reserva" })]
         public async Task<IActionResult> Payment(RequestEstadoReserva requestEstadoReserva)
         {
-            await confirmarReservaUseCase.ExecuteAsync(requestEstadoReserva);
-            return NoContent();
+            var result = await confirmarReservaUseCase.ExecuteAsync(requestEstadoReserva);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await obtenerTodoReservas.ExecuteAsync();
+            return Ok(result);
         }
     }
 }

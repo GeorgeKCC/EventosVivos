@@ -15,8 +15,8 @@ namespace ModuloReserva.Strategies.StrategyImplementation
         /// Cancela una reserva aplicando reglas de pérdida según horas restantes al evento.
         /// </summary>
         /// <param name="ReservaId">Identificador de la reserva a cancelar.</param>
-        /// <returns></returns>
-        public async Task ExecuteAsync(int ReservaId)
+        /// <returns>Resultado de la ejecución de la estrategia.</returns>
+        public async Task<string> ExecuteAsync(int ReservaId)
         {
             Reserva reserva = await GetReservaById(ReservaId);
 
@@ -39,6 +39,7 @@ namespace ModuloReserva.Strategies.StrategyImplementation
 
             eventosVivosDbContext.Reservas.Update(reserva);
             await eventosVivosDbContext.SaveChangesAsync();
+            return "Reserva cancelada exitosamente";
         }
 
         /// <summary>

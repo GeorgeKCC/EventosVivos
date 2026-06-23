@@ -63,6 +63,7 @@ namespace ModuloEventoTest
 
             var resultado = evento.EventoToResponseBuscarEvento();
 
+            resultado.EventoId.Should().Be(evento.Id);
             resultado.Titulo.Should().Be(evento.Titulo);
             resultado.Descripción.Should().Be(evento.Descripcion);
             resultado.VenuedId.Should().Be(evento.VenueId);

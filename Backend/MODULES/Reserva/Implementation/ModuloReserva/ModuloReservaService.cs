@@ -17,11 +17,14 @@ namespace ModuloReserva
         /// <returns>La colección de servicios con los servicios del módulo registrados.</returns>
         public static IServiceCollection ModuloReservaRegisterServices(this IServiceCollection services)
         {
+            services.AddScoped<IObtenerTodoReservas, ObtenerTodoReservas>();
+            services.AddScoped<IConfirmarReservaUseCase, ConfirmarReservaUseCase>();
             services.AddScoped<ICrearReservaUserCase, CrearReservaUserCase>();
             services.AddScoped<IStrategyReserva, StrategyReservaConfirmado>();
             services.AddScoped<IStrategyReserva, StrategyReservaCancelada>();
 
             services.AddScoped<IValidator<RequestCrearReserva>, ValidationCrearReservaUserCase>();
+            services.AddScoped<IValidator<RequestEstadoReserva>, ValidationConfirmarReservaUseCase>();
             return services;
         }
     }

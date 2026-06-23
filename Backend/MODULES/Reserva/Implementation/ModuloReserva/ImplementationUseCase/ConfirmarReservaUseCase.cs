@@ -14,7 +14,7 @@ namespace ModuloReserva.ImplementationUseCase
         /// </summary>
         /// <param name="requestEstadoReserva">Datos con el nuevo estado de la reserva.</param>
         /// <returns></returns>
-        public async Task ExecuteAsync(RequestEstadoReserva requestEstadoReserva)
+        public async Task<string> ExecuteAsync(RequestEstadoReserva requestEstadoReserva)
         {
             var validate = await validator.ValidateAsync(requestEstadoReserva);
             if (validate.IsValid is false)
@@ -25,7 +25,8 @@ namespace ModuloReserva.ImplementationUseCase
            var strategy = strategies.FirstOrDefault(s => s.StrategyId == (int)requestEstadoReserva.EstadoReservaEnum) 
                           ?? throw new InvalidOperationException($"No strategy found for EstadoReservaEnum: {requestEstadoReserva.EstadoReservaEnum}");
 
-            await strategy.ExecuteAsync(requestEstadoReserva.ReservaId);
+           var result = await strategy.ExecuteAsync(requestEstadoReserva.ReservaId);
+            return result;
         }
     }
 

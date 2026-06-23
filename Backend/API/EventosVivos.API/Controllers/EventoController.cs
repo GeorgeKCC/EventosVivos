@@ -10,7 +10,9 @@ namespace EventosVivos.API.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     public class EventoController(ICrearEventoUseCase crearEventoUseCase,
-                                  IBuscarEventoUseCase buscarEventoUseCase) : ControllerBase
+                                  IBuscarEventoUseCase buscarEventoUseCase,
+                                  IObtenerTodoVenueUseCase obtenerTodoVenueUseCase,
+                                  IObtenerTodoTipoEventoUseCase obtenerTodoTipoEventoUseCase) : ControllerBase
     {
         /// <summary>
         /// Crea un nuevo evento.
@@ -35,6 +37,22 @@ namespace EventosVivos.API.Controllers
         public async Task<IActionResult> Search([FromQuery] RequestBuscarEvento requestBuscarEvento)
         {
            var result = await buscarEventoUseCase.ExecuteAsync(requestBuscarEvento);
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllVenue")]
+        [Cacheable("Venue:list", DurationSeconds = 120, Tags = new[] { "Venue" })]
+        public async Task<IActionResult> GetAllVenue()
+        {
+            var result = await obtenerTodoVenueUseCase.ExecuteAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllTipoEvento")]
+        [Cacheable("TipoEvento:list", DurationSeconds = 120, Tags = new[] { "TipoEvento" })]
+        public async Task<IActionResult> GetAllTipoEvento()
+        {
+            var result = await obtenerTodoTipoEventoUseCase.ExecuteAsync();
             return Ok(result);
         }
     }

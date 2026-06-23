@@ -6,7 +6,7 @@ services:
       - ConnectionStrings__SqlServerConnection=Server=SqlServer,1433;Database=EventosVivos;User Id=SA;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
       - ConnectionStrings__RedisConnection=Redis:6379
     ports:
-      - "8080"
+      - "8080:8080"
     depends_on:
       - SqlServer
       - Redis

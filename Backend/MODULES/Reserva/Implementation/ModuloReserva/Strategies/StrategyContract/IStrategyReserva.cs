@@ -8,7 +8,7 @@
         /// Ejecuta la estrategia de cambio de estado para una reserva.
         /// </summary>
         /// <param name="ReservaId">Identificador de la reserva.</param>
-        /// <returns></returns>
-        Task ExecuteAsync(int ReservaId);
+        /// <returns>Resultado de la ejecución de la estrategia.</returns>
+        Task<string> ExecuteAsync(int ReservaId);
     }
 }

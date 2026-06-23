@@ -1,0 +1,75 @@
+<section class="buscar-evento">
+  <div class="header">
+    <h2>Buscar Evento</h2>
+    <a routerLink="/crear-evento" class="btn-crear">+ Crear Evento</a>
+  </div>
+
+  <form class="filters" (ngSubmit)="search()">
+    <div class="filter-row">
+      <div class="field">
+        <label for="titulo">Título</label>
+        <input id="titulo" type="text" [(ngModel)]="filters.titulo" name="titulo" placeholder="Nombre del evento" />
+      </div>
+      <div class="field">
+        <label for="tipoEventoId">Tipo Evento ID</label>
+        <input id="tipoEventoId" type="number" [(ngModel)]="filters.tipoEventoId" name="tipoEventoId" />
+      </div>
+      <div class="field">
+        <label for="venueId">Venue ID</label>
+        <input id="venueId" type="number" [(ngModel)]="filters.venueId" name="venueId" />
+      </div>
+      <div class="field">
+        <label for="estadoId">Estado ID</label>
+        <input id="estadoId" type="number" [(ngModel)]="filters.estadoId" name="estadoId" />
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="field">
+        <label for="fechaInicio">Fecha Inicio</label>
+        <input id="fechaInicio" type="date" [(ngModel)]="filters.fechaInicioEventoRange" name="fechaInicio" />
+      </div>
+      <div class="field">
+        <label for="fechaFin">Fecha Fin</label>
+        <input id="fechaFin" type="date" [(ngModel)]="filters.fechaFinEventoRange" name="fechaFin" />
+      </div>
+      <div class="field actions">
+        <button type="submit" [disabled]="loading()">
+          {{ loading() ? 'Buscando...' : 'Buscar' }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  @if (eventos().length > 0) {
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Venue</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Capacidad</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (evento of eventos(); track evento.titulo) {
+          <tr>
+            <td>{{ evento.titulo }}</td>
+            <td>{{ evento.venueName }}</td>
+            <td>{{ evento.tipoEventoNombre }}</td>
+            <td>{{ evento.estadoNombre }}</td>
+            <td>{{ evento.fechaInicioEvento }} {{ evento.horaInicioEvento }}</td>
+            <td>{{ evento.fechaFinEvento }} {{ evento.horaFinEvento }}</td>
+            <td>{{ evento.capacidadMaxima }}</td>
+            <td><a [routerLink]="['/crear-reserva']" [queryParams]="{ eventoId: evento.eventoId }" class="btn-reservar">Reservar</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (!loading()) {
+    <p class="no-results">No se encontraron eventos.</p>
+  }
+</section>

@@ -37,6 +37,7 @@ namespace ModuloEvento.Mappers
         public static ResponseBuscarEvento EventoToResponseBuscarEvento(this Evento evento)
         {
             return new ResponseBuscarEvento(
+                evento.Id,
                 evento.Titulo,
                 evento.Descripcion,
                 evento.VenueId,

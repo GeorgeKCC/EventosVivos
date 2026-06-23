@@ -1,0 +1,46 @@
+<section class="buscar-reserva">
+  <div class="header">
+    <h2>Buscar Reserva</h2>
+  </div>
+
+  @if (loading()) {
+    <p>Cargando reservas...</p>
+  }
+
+  @if (reservas().length > 0) {
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Comprador</th>
+          <th>Email</th>
+          <th>Cantidad</th>
+          <th>Evento</th>
+          <th>Estado</th>
+          <th>Cancelación</th>
+          <th>Perdida</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (reserva of reservas(); track reserva.id) {
+          <tr>
+            <td>{{ reserva.id }}</td>
+            <td>{{ reserva.nombreComprador }}</td>
+            <td>{{ reserva.emailComprador }}</td>
+            <td>{{ reserva.cantidad }}</td>
+            <td>{{ reserva.evento?.titulo ?? reserva.eventoId }}</td>
+            <td>{{ reserva.estadoReserva?.nombre ?? reserva.estadoReservaId }}</td>
+            <td>{{ reserva.fechaCancelacion ?? '-' }}</td>
+            <td>{{ reserva.esPerdida ? 'Sí' : 'No' }}</td>
+            <td>
+              <a [routerLink]="['/pagar-reserva']" [queryParams]="{ reservaId: reserva.id }" class="btn-pagar">Pagar</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (!loading()) {
+    <p class="no-results">No se encontraron reservas.</p>
+  }
+</section>

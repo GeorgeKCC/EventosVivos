@@ -1,0 +1,38 @@
+<section class="crear-reserva">
+  <h2>Crear Reserva</h2>
+
+  @if (error()) {
+    <p class="error-msg">{{ error() }}</p>
+  }
+
+  <form class="form" (ngSubmit)="submit()">
+    <div class="form-row">
+      <div class="field">
+        <label for="eventoId">Evento ID</label>
+        <input id="eventoId" type="number" [(ngModel)]="form.eventoId" name="eventoId" required [readonly]="form.eventoId > 0" />
+      </div>
+      <div class="field">
+        <label for="cantidad">Cantidad</label>
+        <input id="cantidad" type="number" [(ngModel)]="form.cantidad" name="cantidad" min="1" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="nombreComprador">Nombre del Comprador</label>
+        <input id="nombreComprador" type="text" [(ngModel)]="form.nombreComprador" name="nombreComprador" required />
+      </div>
+      <div class="field">
+        <label for="emailComprado">Email del Comprador</label>
+        <input id="emailComprado" type="email" [(ngModel)]="form.emailComprado" name="emailComprado" required />
+      </div>
+    </div>
+
+    <div class="form-row actions">
+      <button type="button" (click)="router.navigate(['/buscar-evento'])">Cancelar</button>
+      <button type="submit" [disabled]="loading()" class="btn-primary">
+        {{ loading() ? 'Creando...' : 'Crear Reserva' }}
+      </button>
+    </div>
+  </form>
+</section>

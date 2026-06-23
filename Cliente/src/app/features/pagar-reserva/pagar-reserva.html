@@ -1,0 +1,35 @@
+<section class="pagar-reserva">
+  <h2>Pagar Reserva</h2>
+
+  @if (error()) {
+    <p class="error-msg">{{ error() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="success-msg">{{ successMessage() }}</p>
+  }
+
+  <form class="form" (ngSubmit)="submit()">
+    <div class="form-row">
+      <div class="field">
+        <label for="reservaId">Reserva ID</label>
+        <input id="reservaId" type="number" [(ngModel)]="form.reservaId" name="reservaId" required [readonly]="form.reservaId > 0" />
+      </div>
+      <div class="field">
+        <label for="estadoReservaEnum">Acción</label>
+        <select id="estadoReservaEnum" [(ngModel)]="form.estadoReservaEnum" name="estadoReservaEnum" required>
+          @for (estado of estados; track estado.value) {
+            <option [value]="estado.value">{{ estado.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row actions">
+      <button type="button" (click)="router.navigate(['/buscar-evento'])">Cancelar</button>
+      <button type="submit" [disabled]="loading()" class="btn-primary">
+        {{ loading() ? 'Procesando...' : 'Confirmar' }}
+      </button>
+    </div>
+  </form>
+</section>

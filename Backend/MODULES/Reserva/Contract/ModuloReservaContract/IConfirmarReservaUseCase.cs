@@ -9,6 +9,6 @@ namespace ModuloReservaContract
         /// </summary>
         /// <param name="requestEstadoReserva">Datos con el nuevo estado de la reserva.</param>
         /// <returns></returns>
-        Task ExecuteAsync(RequestEstadoReserva requestEstadoReserva);
+        Task<string> ExecuteAsync(RequestEstadoReserva requestEstadoReserva);
     }
 }

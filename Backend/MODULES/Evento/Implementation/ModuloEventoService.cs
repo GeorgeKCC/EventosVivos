@@ -15,6 +15,8 @@ namespace ModuloEvento
         /// <returns>La colección de servicios con los servicios del módulo registrados.</returns>
         public static IServiceCollection ModuloEventoRegisterServices(this IServiceCollection services)
         {
+            services.AddScoped<IObtenerTodoVenueUseCase, ObtenerTodoVenueUseCase>();
+            services.AddScoped<IObtenerTodoTipoEventoUseCase, ObtenerTodoTipoEventoUseCase>();
             services.AddScoped<ICrearEventoUseCase, CrearEventoUseCase>();
             services.AddScoped<IBuscarEventoUseCase, BuscarEventoUseCase>();
 

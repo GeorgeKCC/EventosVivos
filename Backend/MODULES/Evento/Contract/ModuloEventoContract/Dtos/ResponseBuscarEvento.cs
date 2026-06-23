@@ -1,6 +1,7 @@
 ﻿namespace ModuloEventoContract.Dtos
 {
     public record ResponseBuscarEvento(
+        int EventoId,
         string Titulo, 
         string Descripción,
         int VenuedId,
