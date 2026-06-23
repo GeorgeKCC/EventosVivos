@@ -13,6 +13,11 @@ namespace ModuloReserva.ImplementationUseCase
     internal class CrearReservaUserCase(EventosVivosDbContext eventosVivosDbContext,
                                        IValidator<RequestCrearReserva> validator) : ICrearReservaUserCase
     {
+        /// <summary>
+        /// Crea una nueva reserva validando disponibilidad y reglas de negocio.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva a crear.</param>
+        /// <returns></returns>
         public async Task ExecuteAsync(RequestCrearReserva requestCrearReserva)
         {
             await ValidateRequest(requestCrearReserva);
@@ -34,6 +39,12 @@ namespace ModuloReserva.ImplementationUseCase
             await eventosVivosDbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Valida que eventos con precio mayor a $100 no permitan más de 10 entradas por transacción.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva.</param>
+        /// <param name="evento">Evento asociado a la reserva.</param>
+        /// <returns></returns>
         private static void ValidatePriceAndMaximumTicket(RequestCrearReserva requestCrearReserva, Evento evento)
         {
             if (evento.Precio > 100 && requestCrearReserva.Cantidad > 10)
@@ -43,6 +54,11 @@ namespace ModuloReserva.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Valida que no se permitan reservas para eventos que inicien en menos de 1 hora.
+        /// </summary>
+        /// <param name="horasParaInicio">Horas restantes para el inicio del evento.</param>
+        /// <returns></returns>
         private static void ValidateInitHour(double horasParaInicio)
         {
             if (horasParaInicio < 1)
@@ -52,6 +68,12 @@ namespace ModuloReserva.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Valida que si el evento inicia en menos de 24 horas, solo se permitan máximo 5 entradas.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva.</param>
+        /// <param name="horasParaInicio">Horas restantes para el inicio del evento.</param>
+        /// <returns></returns>
         private static void ValidateHoursAndReserve(RequestCrearReserva requestCrearReserva, double horasParaInicio)
         {
             if (horasParaInicio < 24 && requestCrearReserva.Cantidad > 5)
@@ -61,6 +83,12 @@ namespace ModuloReserva.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Valida que haya suficientes entradas disponibles para la cantidad solicitada.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva.</param>
+        /// <param name="evento">Evento asociado a la reserva.</param>
+        /// <returns></returns>
         private async Task ValidateTickets(RequestCrearReserva requestCrearReserva, Evento evento)
         {
             var totalReservadas = await eventosVivosDbContext.Reservas
@@ -76,6 +104,11 @@ namespace ModuloReserva.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Obtiene un evento por su identificador.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva que contiene el EventoId.</param>
+        /// <returns>Entidad Evento encontrada.</returns>
         private async Task<Evento> GetEventoById(RequestCrearReserva requestCrearReserva)
         {
             return await eventosVivosDbContext.Eventos
@@ -84,6 +117,11 @@ namespace ModuloReserva.ImplementationUseCase
                 ?? throw new NotFoundCustomException($"No se encontró evento, id:{requestCrearReserva.EventoId}");
         }
 
+        /// <summary>
+        /// Valida los campos del request utilizando FluentValidation.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva a validar.</param>
+        /// <returns></returns>
         private async Task ValidateRequest(RequestCrearReserva requestCrearReserva)
         {
             var validate = await validator.ValidateAsync(requestCrearReserva);

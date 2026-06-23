@@ -8,6 +8,11 @@ namespace ModuloEvento.ImplementationUseCase
 {
     internal class BuscarEventoUseCase(EventosVivosDbContext eventosVivosDbContext) : IBuscarEventoUseCase
     {
+        /// <summary>
+        /// Busca eventos aplicando filtros opcionales por tipo, venue, estado, título y rango de fechas.
+        /// </summary>
+        /// <param name="requestBuscarEvento">Filtros de búsqueda para eventos.</param>
+        /// <returns>Colección de eventos que coinciden con los filtros.</returns>
         public async Task<IEnumerable<ResponseBuscarEvento>> ExecuteAsync(RequestBuscarEvento requestBuscarEvento)
         {
             var query = eventosVivosDbContext.Eventos

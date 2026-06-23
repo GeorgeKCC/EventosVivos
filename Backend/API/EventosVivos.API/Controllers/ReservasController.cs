@@ -13,6 +13,11 @@ namespace EventosVivos.API.Controllers
                                     IConfirmarReservaUseCase confirmarReservaUseCase) : ControllerBase
     {
 
+        /// <summary>
+        /// Crea una nueva reserva para un evento.
+        /// </summary>
+        /// <param name="requestCrearReserva">Datos de la reserva a crear.</param>
+        /// <returns></returns>
         [HttpPost]
         [InvalidateCache(Tags = new[] { "Reserva" })]
         public async Task<IActionResult> Create(RequestCrearReserva requestCrearReserva)
@@ -21,6 +26,11 @@ namespace EventosVivos.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Actualiza el estado de una reserva (confirmar o cancelar).
+        /// </summary>
+        /// <param name="requestEstadoReserva">Datos con el nuevo estado de la reserva.</param>
+        /// <returns></returns>
         [HttpPost("Payment")]
         [InvalidateCache(Tags = new[] { "Reserva" })]
         public async Task<IActionResult> Payment(RequestEstadoReserva requestEstadoReserva)

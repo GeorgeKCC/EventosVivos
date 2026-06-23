@@ -6,6 +6,11 @@ namespace ModuloEvento.Mappers
 {
     internal static class EventosMappers
     {
+        /// <summary>
+        /// Convierte un RequestCrearEvento en una entidad Evento.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del request de creación.</param>
+        /// <returns>Entidad Evento mapeada.</returns>
         public static Evento RequestCrearEventoToEvento(this RequestCrearEvento requestCrearEvento) 
         {
             return new Evento
@@ -24,6 +29,11 @@ namespace ModuloEvento.Mappers
             };
         }
 
+        /// <summary>
+        /// Convierte una entidad Evento en un ResponseBuscarEvento.
+        /// </summary>
+        /// <param name="evento">Entidad Evento a convertir.</param>
+        /// <returns>DTO de respuesta con los datos del evento.</returns>
         public static ResponseBuscarEvento EventoToResponseBuscarEvento(this Evento evento)
         {
             return new ResponseBuscarEvento(

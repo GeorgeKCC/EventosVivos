@@ -10,6 +10,11 @@ namespace ModuloReserva
 {
     public static class ModuloReservaService
     {
+        /// <summary>
+        /// Registra los servicios del módulo de reservas en el contenedor de dependencias.
+        /// </summary>
+        /// <param name="services">Colección de servicios.</param>
+        /// <returns>La colección de servicios con los servicios del módulo registrados.</returns>
         public static IServiceCollection ModuloReservaRegisterServices(this IServiceCollection services)
         {
             services.AddScoped<ICrearReservaUserCase, CrearReservaUserCase>();

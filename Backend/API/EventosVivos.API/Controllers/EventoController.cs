@@ -12,6 +12,11 @@ namespace EventosVivos.API.Controllers
     public class EventoController(ICrearEventoUseCase crearEventoUseCase,
                                   IBuscarEventoUseCase buscarEventoUseCase) : ControllerBase
     {
+        /// <summary>
+        /// Crea un nuevo evento.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del evento a crear.</param>
+        /// <returns></returns>
         [HttpPost]
         [InvalidateCache(Tags = new[] { "Evento" })]
         public async Task<IActionResult> Create(RequestCrearEvento requestCrearEvento)
@@ -20,6 +25,11 @@ namespace EventosVivos.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Busca eventos según los filtros proporcionados.
+        /// </summary>
+        /// <param name="requestBuscarEvento">Filtros de búsqueda para eventos.</param>
+        /// <returns>Lista de eventos que coinciden con los filtros.</returns>
         [HttpGet]
         [Cacheable("Evento:list", DurationSeconds = 120, Tags = new[] { "Evento" })]
         public async Task<IActionResult> Search([FromQuery] RequestBuscarEvento requestBuscarEvento)

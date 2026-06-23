@@ -11,6 +11,11 @@ namespace ModuloReserva.Strategies.StrategyImplementation
     {
         public int StrategyId => (int)EstadoReservaEnum.Cancelada;
 
+        /// <summary>
+        /// Cancela una reserva aplicando reglas de pérdida según horas restantes al evento.
+        /// </summary>
+        /// <param name="ReservaId">Identificador de la reserva a cancelar.</param>
+        /// <returns></returns>
         public async Task ExecuteAsync(int ReservaId)
         {
             Reserva reserva = await GetReservaById(ReservaId);
@@ -36,6 +41,11 @@ namespace ModuloReserva.Strategies.StrategyImplementation
             await eventosVivosDbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Valida que el estado actual de la reserva permita la cancelación.
+        /// </summary>
+        /// <param name="reserva">Entidad reserva a validar.</param>
+        /// <returns></returns>
         private static void ValidationStatusReservation(Reserva reserva)
         {
             if (reserva.EstadoReservaId == (int)EstadoReservaEnum.Cancelada
@@ -46,6 +56,11 @@ namespace ModuloReserva.Strategies.StrategyImplementation
             }
         }
 
+        /// <summary>
+        /// Obtiene una reserva con su evento asociado por identificador.
+        /// </summary>
+        /// <param name="ReservaId">Identificador de la reserva.</param>
+        /// <returns>Entidad Reserva con el Evento incluido.</returns>
         private async Task<Reserva> GetReservaById(int ReservaId)
         {
             return await eventosVivosDbContext.Reservas

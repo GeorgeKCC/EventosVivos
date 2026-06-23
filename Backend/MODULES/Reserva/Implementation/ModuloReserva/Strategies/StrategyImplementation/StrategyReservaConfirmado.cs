@@ -9,6 +9,11 @@ namespace ModuloReserva.Strategies.StrategyImplementation
     {
         public int StrategyId => (int)EstadoReservaEnum.Confirmada;
 
+        /// <summary>
+        /// Confirma una reserva validando que no esté ya confirmada o cancelada.
+        /// </summary>
+        /// <param name="ReservaId">Identificador de la reserva a confirmar.</param>
+        /// <returns></returns>
         public async Task ExecuteAsync(int ReservaId)
         {
             var reserva = eventosVivosDbContext.Reservas.FirstOrDefault(r => r.Id == ReservaId) ?? throw new NotFoundCustomException($"No se encontró reserva, id:{ReservaId}");

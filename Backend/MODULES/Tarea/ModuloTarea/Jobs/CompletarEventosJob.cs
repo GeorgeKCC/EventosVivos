@@ -10,6 +10,11 @@ namespace ModuloTarea.Jobs
     public class CompletarEventosJob(EventosVivosDbContext dbContext,
                                      ILogger<CompletarEventosJob> logger) : IJob
     {
+        /// <summary>
+        /// Verifica eventos activos cuya fecha/hora de fin ya pasó y los marca como completados.
+        /// </summary>
+        /// <param name="context">Contexto de ejecución del job de Quartz.</param>
+        /// <returns></returns>
         public async Task Execute(IJobExecutionContext context)
         {
             var ahora = DateTime.Now;

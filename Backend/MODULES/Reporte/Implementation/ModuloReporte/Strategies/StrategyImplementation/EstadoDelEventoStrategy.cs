@@ -12,6 +12,11 @@ namespace ModuloReporte.Strategies.StrategyImplementation
     {
         public int TipoReporteId => (int)TipoReporte.EstadoDelEvento;
 
+        /// <summary>
+        /// Genera un reporte Excel con el estado completo de un evento.
+        /// </summary>
+        /// <param name="EventoId">Identificador del evento.</param>
+        /// <returns>Resultado del reporte con el archivo Excel generado.</returns>
         public async Task<ReporteResult> ExecuteAsync(int EventoId)
         {
             var evento = await eventosVivosDbContext.Eventos

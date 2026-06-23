@@ -9,6 +9,11 @@ namespace ModuloReserva.ImplementationUseCase
     internal class ConfirmarReservaUseCase(IEnumerable<IStrategyReserva> strategies,
                                            IValidator<RequestEstadoReserva> validator) : IConfirmarReservaUseCase
     {
+        /// <summary>
+        /// Ejecuta la estrategia correspondiente para cambiar el estado de una reserva.
+        /// </summary>
+        /// <param name="requestEstadoReserva">Datos con el nuevo estado de la reserva.</param>
+        /// <returns></returns>
         public async Task ExecuteAsync(RequestEstadoReserva requestEstadoReserva)
         {
             var validate = await validator.ValidateAsync(requestEstadoReserva);

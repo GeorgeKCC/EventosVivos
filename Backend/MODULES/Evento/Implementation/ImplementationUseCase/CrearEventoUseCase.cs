@@ -13,6 +13,11 @@ namespace ModuloEvento.ImplementationUseCase
     internal class CrearEventoUseCase(EventosVivosDbContext eventosVivosDbContext,
                                        IValidator<RequestCrearEvento> validator) : ICrearEventoUseCase
     {
+        /// <summary>
+        /// Crea un nuevo evento validando las reglas de negocio.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del evento a crear.</param>
+        /// <returns></returns>
         public async Task ExecuteAsync(RequestCrearEvento requestCrearEvento)
         {
             await ValidateRequest(requestCrearEvento);
@@ -24,6 +29,11 @@ namespace ModuloEvento.ImplementationUseCase
             await eventosVivosDbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Valida los campos del request utilizando FluentValidation.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del evento a validar.</param>
+        /// <returns></returns>
         private async Task ValidateRequest(RequestCrearEvento requestCrearEvento)
         {
             var validate = await validator.ValidateAsync(requestCrearEvento);
@@ -33,6 +43,11 @@ namespace ModuloEvento.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Valida que los eventos en fines de semana no inicien después de las 22:00.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del evento a validar.</param>
+        /// <returns></returns>
         private static void ValidateNightHours(RequestCrearEvento requestCrearEvento)
         {
             var diaSemana = requestCrearEvento.InicioEvento.DayOfWeek;
@@ -43,6 +58,11 @@ namespace ModuloEvento.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Valida que no existan eventos activos superpuestos en el mismo venue.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del evento a validar.</param>
+        /// <returns></returns>
         private async Task ValidateOverlap(RequestCrearEvento requestCrearEvento)
         {
             var inicioNuevo = requestCrearEvento.InicioEvento.ToDateTime(requestCrearEvento.IniciaHora);
@@ -62,6 +82,11 @@ namespace ModuloEvento.ImplementationUseCase
             }
         }
 
+        /// <summary>
+        /// Valida que la capacidad máxima del evento no exceda la capacidad del venue.
+        /// </summary>
+        /// <param name="requestCrearEvento">Datos del evento a validar.</param>
+        /// <returns></returns>
         private async Task ValidateCapacity(RequestCrearEvento requestCrearEvento)
         {
             var venues = await eventosVivosDbContext.Venues.AsNoTracking().FirstOrDefaultAsync(x => x.Id == requestCrearEvento.VenueId)
