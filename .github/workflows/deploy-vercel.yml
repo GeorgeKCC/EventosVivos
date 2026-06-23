@@ -38,15 +38,14 @@ jobs:
       - name: Pull Vercel environment
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build with Vercel
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build Angular
+        run: npm run build
 
-      - name: Debug output
+      - name: Create Vercel output
         run: |
-          echo "=== dist contents ==="
-          find dist -type f | head -30 || echo "No dist/"
-          echo "=== .vercel/output contents ==="
-          find .vercel/output -type f | head -30 || echo "No .vercel/output/"
+          mkdir -p .vercel/output/static
+          cp -r dist/Cliente/* .vercel/output/static/
+          echo '{"version":3,"routes":[{"handle":"filesystem"},{"src":"/(.*)", "dest":"/index.html"}]}' > .vercel/output/config.json
 
       - name: Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
