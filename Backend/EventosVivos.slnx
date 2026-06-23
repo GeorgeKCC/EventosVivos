@@ -42,6 +42,9 @@
   <Folder Name="/SHARED/">
     <Project Path="SHARED/Transversal/Transversal.csproj" Id="f73690da-fe73-4ca7-a946-5c16fd00258e" />
   </Folder>
+  <Folder Name="/TEST/">
+    <Project Path="TESTS/FlowTests/FlowTests.csproj" />
+  </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>

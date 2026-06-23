@@ -24,5 +24,9 @@
     <None Include="MODULES\Security\Implementation\ModuloSecurity\ImplementationUseCase\LoginUseCase.cs" />
     <None Include="MODULES\Security\Implementation\ModuloSecurity\ModuloSecurity.csproj" />
     <None Include="MODULES\Security\Implementation\ModuloSecurity\ModuloSecurityService.cs" />
+    <None Include="TESTS\FlowTests\FlowTests.csproj" />
+    <None Include="TESTS\FlowTests\FlowTestServiceProvider.cs" />
+    <None Include="TESTS\FlowTests\FlujoCompletoTest.cs" />
+    <None Include="TESTS\FlowTests\GlobalUsings.cs" />
   </ItemGroup>
 </Project>
