@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using ModuloReporteContract;
 using ModuloReporteContract.Dtos;
 
 namespace EventosVivos.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class ReporteController(IGenerarReporteUseCase generarReporteUseCase) : ControllerBase
     {
         [HttpGet]

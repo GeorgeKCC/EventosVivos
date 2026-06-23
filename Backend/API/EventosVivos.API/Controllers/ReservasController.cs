@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using ModuloReservaContract;
 using ModuloReservaContract.Dtos;
 using Transversal.Cache.Attributes;
 
 namespace EventosVivos.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class ReservasController(ICrearReservaUserCase crearReservaUserCase,
                                     IConfirmarReservaUseCase confirmarReservaUseCase) : ControllerBase
     {
