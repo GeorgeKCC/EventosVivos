@@ -12,6 +12,16 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["API/EventosVivos.API/EventosVivos.API.csproj", "API/EventosVivos.API/"]
+COPY ["MODULES/Evento/Implementation/ModuloEvento.csproj", "MODULES/Evento/Implementation/"]
+COPY ["MODULES/Evento/Contract/ModuloEventoContract/ModuloEventoContract.csproj", "MODULES/Evento/Contract/ModuloEventoContract/"]
+COPY ["MODULES/Reporte/Implementation/ModuloReporte/ModuloReporte.csproj", "MODULES/Reporte/Implementation/ModuloReporte/"]
+COPY ["MODULES/Reporte/Contract/ModuloReporteContract/ModuloReporteContract.csproj", "MODULES/Reporte/Contract/ModuloReporteContract/"]
+COPY ["MODULES/Reserva/Implementation/ModuloReserva/ModuloReserva.csproj", "MODULES/Reserva/Implementation/ModuloReserva/"]
+COPY ["MODULES/Reserva/Contract/ModuloReservaContract/ModuloReservaContract.csproj", "MODULES/Reserva/Contract/ModuloReservaContract/"]
+COPY ["MODULES/Security/Implementation/ModuloSecurity/ModuloSecurity.csproj", "MODULES/Security/Implementation/ModuloSecurity/"]
+COPY ["MODULES/Security/Contract/ModuloSecurityContract/ModuloSecurityContract.csproj", "MODULES/Security/Contract/ModuloSecurityContract/"]
+COPY ["MODULES/Tarea/ModuloTarea/ModuloTarea.csproj", "MODULES/Tarea/ModuloTarea/"]
+COPY ["SHARED/Transversal/Transversal.csproj", "SHARED/Transversal/"]
 RUN dotnet restore "./API/EventosVivos.API/EventosVivos.API.csproj"
 COPY . .
 WORKDIR "/src/API/EventosVivos.API"
