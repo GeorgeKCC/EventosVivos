@@ -17,6 +17,7 @@
   </Folder>
   <Folder Name="/MODULES/Reporte/Implementation/">
     <Project Path="MODULES/Reporte/Implementation/ModuloReporte/ModuloReporte.csproj" Id="2073de96-8ecd-44a5-ac25-96bc7822d068" />
+    <Project Path="MODULES/Reporte/Implementation/ModuloReporteTest/ModuloReporteTest.csproj" Id="e11053a7-9f77-4f4a-9a30-7ed405e2da74" />
   </Folder>
   <Folder Name="/MODULES/Reserva/" />
   <Folder Name="/MODULES/Reserva/Contract/">
