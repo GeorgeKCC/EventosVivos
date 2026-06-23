@@ -806,6 +806,119 @@ La API está desplegada en Railway:
 
 ---
 
-## 📄 Licencia
+## �️ Cliente — Angular UI
+
+### Arquitectura Modular
+
+El frontend está construido con **Angular 21** usando **standalone components** y una arquitectura modular con **lazy loading** por feature.
+
+```
+Cliente/src/app/
+│
+├── app.config.ts              ← Configuración global (router, HTTP, interceptors)
+├── app.routes.ts              ← Rutas principales con lazy loading
+├── app.ts / app.html          ← Componente raíz
+│
+├── core/                      ← Servicios singleton e interceptores
+│   └── interceptors/
+│       └── api.interceptor.ts ← Agrega X-Api-Key y Bearer Token a cada request
+│
+├── features/                  ← Módulos de negocio (lazy loaded)
+│   ├── login/                 ← Autenticación
+│   ├── buscar-evento/         ← Búsqueda y listado de eventos
+│   ├── crear-evento/          ← Creación de eventos
+│   ├── crear-reserva/         ← Creación de reservas
+│   ├── pagar-reserva/         ← Confirmación/cancelación de reservas
+│   ├── buscar-reserva/        ← Búsqueda de reservas
+│   └── reportes/              ← Generación de reportes
+│
+├── shared/                    ← Componentes, pipes y directivas reutilizables
+│   └── components/
+│
+└── layout/                    ← Componentes de estructura visual
+    └── navbar/                ← Barra de navegación
+```
+
+### Estructura de cada Feature
+
+Cada feature es autocontenido con sus propios modelos, servicios y rutas:
+
+```
+features/buscar-evento/
+├── buscar-evento.ts           ← Componente standalone
+├── buscar-evento.html         ← Template
+├── buscar-evento.scss         ← Estilos
+├── buscar-evento.routes.ts    ← Rutas del feature
+├── buscar-evento.spec.ts      ← Tests
+├── models/
+│   └── evento.model.ts        ← Interfaces/tipos del dominio
+└── services/
+    └── evento.service.ts      ← Servicio HTTP del feature
+```
+
+### Routing (Lazy Loading)
+
+Todas las rutas cargan sus módulos de forma diferida para optimizar el bundle inicial:
+
+```typescript
+export const routes: Routes = [
+  { path: '', redirectTo: 'buscar-evento', pathMatch: 'full' },
+  { path: 'login', loadChildren: () => import('./features/login/login.routes') },
+  { path: 'buscar-evento', loadChildren: () => import('./features/buscar-evento/buscar-evento.routes') },
+  { path: 'crear-evento', loadChildren: () => import('./features/crear-evento/crear-evento.routes') },
+  { path: 'crear-reserva', loadChildren: () => import('./features/crear-reserva/crear-reserva.routes') },
+  { path: 'pagar-reserva', loadChildren: () => import('./features/pagar-reserva/pagar-reserva.routes') },
+  { path: 'buscar-reserva', loadChildren: () => import('./features/buscar-reserva/buscar-reserva.routes') },
+  { path: 'reportes', loadChildren: () => import('./features/reportes/reportes.routes') },
+];
+```
+
+### Levantar la UI en local
+
+#### Prerrequisitos
+
+| Herramienta | Versión | Descarga |
+|------------|---------|----------|
+| **Node.js** | 22+ | [nodejs.org](https://nodejs.org/) |
+| **npm** | 11+ | Incluido con Node.js |
+
+#### Pasos
+
+```bash
+# 1. Clonar el repositorio (si no lo has hecho)
+git clone https://github.com/GeorgeKCC/EventosVivos.git
+cd EventosVivos/Cliente
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Levantar el servidor de desarrollo
+ng serve
+# o alternativamente:
+npm start
+```
+
+La aplicación estará disponible en `http://localhost:4200`.
+
+> **Nota**: Asegúrate de tener el backend corriendo (`docker-compose up -d` en la carpeta `Backend/`) para que la UI pueda consumir la API.
+
+### Stack del Cliente
+
+| Tecnología | Versión |
+|-----------|---------|
+| **Angular** | 21 |
+| **TypeScript** | 5.9 |
+| **RxJS** | 7.8 |
+| **SCSS** | - |
+| **Vitest** | 4.0 |
+| **Node.js** | 22+ |
+
+### Despliegue en Vercel (Producción)
+
+El frontend se despliega automáticamente en **Vercel** al hacer push a `main` con cambios en `Cliente/**`.
+
+---
+
+## �📄 Licencia
 
 Proyecto privado — Todos los derechos reservados.

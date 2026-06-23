@@ -1,5 +1,5 @@
 {
-  "buildCommand": null,
-  "outputDirectory": "dist/Cliente/browser",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/Cliente",
   "framework": null
 }
