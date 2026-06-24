@@ -43,16 +43,10 @@ jobs:
           mkdir -p .vercel
           echo '{"orgId":"'"$VERCEL_ORG_ID"'","projectId":"'"$VERCEL_PROJECT_ID"'"}' > .vercel/project.json
           mkdir -p .vercel/output/static
-          if [ -d "dist/Cliente/browser" ]; then
-            echo "Copying from dist/Cliente/browser/"
-            cp -r dist/Cliente/browser/* .vercel/output/static/
-          else
-            echo "Copying from dist/Cliente/"
-            cp -r dist/Cliente/* .vercel/output/static/
-          fi
+          cp -r dist/Cliente/browser/* .vercel/output/static/
           echo '{"version":3,"routes":[{"handle":"filesystem"},{"src":"/(.*)", "dest":"/index.html"}]}' > .vercel/output/config.json
           echo "=== Files in static ==="
-          find .vercel/output/static -type f | head -20
+          ls -la .vercel/output/static/
 
       - name: Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
