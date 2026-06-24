@@ -47,7 +47,7 @@ El backend implementa una **arquitectura modular monolítica** combinada con **V
 │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
 │  │  Database    │  │    Cache     │  │      Exceptions          │  │
 │  │  EF Core     │  │  FusionCache │  │  Global Exception Handler│  │
-│  │  SQL Server  │  │  Redis       │  │  Custom Business Errors  │  │
+│  │  PostgreSQL  │  │  Redis       │  │  Custom Business Errors  │  │
 │  │  Migrations  │  │  Backplane   │  │                          │  │
 │  │  Seed Data   │  │  Invalidation│  │                          │  │
 │  └─────────────┘  └──────────────┘  └──────────────────────────┘  │
@@ -125,7 +125,7 @@ Microservicios desde el inicio:
 Monolito Modular (actual):
 ├── 1 repositorio
 ├── 1 pipeline CI/CD
-├── 1 docker-compose (API + SQL Server + Redis)
+├── 1 docker-compose (API + PostgreSQL + Redis)
 ├── Transacciones locales
 └── Deploy simple
 ```
@@ -194,7 +194,7 @@ La migración a microservicios se justifica cuando aparecen **uno o más** de es
 | **Records inmutables** | DTOs como `record` garantizan inmutabilidad y reducen bugs de estado compartido |
 | **Cache inteligente** | FusionCache con L1 (memory) + L2 (Redis) + Backplane da la mejor latencia posible sin stale data |
 | **Validación centralizada** | FluentValidation con AbstractValidator desacopla reglas del UseCase |
-| **Containerización** | Docker Compose con volúmenes persistentes para SQL Server y Redis |
+| **Containerización** | Docker Compose con volúmenes persistentes para PostgreSQL y Redis |
 
 ### 🔧 Mejoras recomendadas para la siguiente iteración
 
@@ -222,7 +222,7 @@ var evento = await eventoQueryService.GetByIdAsync(request.EventoId);
 #### 3. Agregar Health Checks
 ```csharp
 builder.Services.AddHealthChecks()
-    .AddSqlServer(connectionString)
+    .AddNpgSql(connectionString)
     .AddRedis(redisConnection);
 ```
 **Beneficio**: Monitoreo de dependencias externas, útil tanto en monolito como en microservicios. Compatible con Docker health checks y orquestadores.
@@ -309,8 +309,8 @@ D:\EventosVivos\Backend\
 |------|-----------|---------|
 | **Runtime** | .NET | 10 |
 | **Framework** | ASP.NET Core Web API | 10 |
-| **ORM** | Entity Framework Core | 10.0.9 |
-| **Base de Datos** | SQL Server | 2022 |
+| **ORM** | Entity Framework Core + Npgsql | 10.0.4 |
+| **Base de Datos** | PostgreSQL | 17 (Alpine) |
 | **Cache Distribuido** | Redis + FusionCache | Redis latest / FusionCache 2.6.0 |
 | **Backplane** | StackExchange.Redis Backplane | 2.6.0 |
 | **Autenticación** | JWT Bearer (Microsoft.AspNetCore.Authentication.JwtBearer) | 10.0.9 |
@@ -325,9 +325,9 @@ D:\EventosVivos\Backend\
 
 ---
 
-## 🗄️ Base de Datos — SQL Server
+## 🗄️ Base de Datos — PostgreSQL
 
-Se utiliza **Entity Framework Core** con **Code-First Migrations** y **Data Seeding** automático al iniciar la aplicación.
+Se utiliza **Entity Framework Core** con **Npgsql**, **Code-First Migrations** y **Data Seeding** automático al iniciar la aplicación.
 
 ### Modelo de Datos
 
@@ -490,7 +490,7 @@ Tráfico: < 1K RPM           Tráfico: 1K-10K RPM           Tráfico: > 10K RPM
 | **Encapsulación** | Clases de implementación son `internal`, solo las interfaces y DTOs son públicos |
 | **Independencia de datos** | Cada módulo opera sobre un subconjunto de entidades. Separar en DBs independientes requiere mínimo refactoring |
 | **Registro independiente** | Cada módulo tiene su propio `RegisterServices()`, migrable a un `Program.cs` independiente |
-| **Docker-ready** | La infraestructura ya corre en contenedores (SQL Server + Redis + API) |
+| **Docker-ready** | La infraestructura ya corre en contenedores (PostgreSQL + Redis + API) |
 | **Stateless API** | Cache distribuido en Redis permite escalar horizontalmente sin estado en memoria local |
 | **Background Jobs aislados** | `ModuloTarea` ya es un módulo separado, extraíble a un Worker Service independiente |
 
@@ -528,7 +528,7 @@ La aplicación se ejecuta completamente en contenedores:
 ```yaml
 services:
   eventosvivos.api    → ASP.NET Core API (.NET 10)
-  SqlServer           → mcr.microsoft.com/mssql/server:2022-latest
+  PostgreSql          → postgres:17-alpine
   Redis               → redis:latest
 ```
 
@@ -599,7 +599,7 @@ Cada módulo tiene su proyecto de tests asociado con la convención `Modulo*Test
 ```json
 {
   "ConnectionStrings": {
-    "SqlServerConnection": "Server=...",
+    "PostgreSqlConnection": "Host=...;Port=5432;Database=EventosVivos;Username=postgres;Password=...",
     "RedisConnection": "localhost:6379"
   }
 }
@@ -669,10 +669,10 @@ Configurado para permitir peticiones desde Angular:
 
 | Herramienta | Descarga | Descripción |
 |------------|----------|-------------|
-| **Docker Desktop** | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/) | Para ejecutar los contenedores (API, SQL Server, Redis) |
+| **Docker Desktop** | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/) | Para ejecutar los contenedores (API, PostgreSQL, Redis) |
 | **Git** | [git-scm.com](https://git-scm.com/) | Para clonar el repositorio |
 
-> 💡 **Nota**: No necesitas instalar .NET SDK, SQL Server ni Redis en tu máquina. Todo se ejecuta dentro de contenedores Docker.
+> 💡 **Nota**: No necesitas instalar .NET SDK, PostgreSQL ni Redis en tu máquina. Todo se ejecuta dentro de contenedores Docker.
 
 ### Paso 1: Clonar el repositorio
 
@@ -695,7 +695,7 @@ Esto levantará 3 contenedores:
 | Contenedor | Puerto | Descripción |
 |-----------|--------|-------------|
 | `eventosvivos.api` | `8080` | API .NET 10 |
-| `SqlServer` | `1434` | SQL Server 2022 |
+| `PostgreSql` | `5432` | PostgreSQL 17 |
 | `Redis` | `6379` | Redis (cache) |
 
 ### Paso 4: Verificar que los contenedores están corriendo
